@@ -1,8 +1,13 @@
 import random
+import itertools
 from random import choice
 from math import sqrt
 
 class country():
+    def __iter__(self):
+        for item in self.__cities:
+            yield item
+    
     def __init__(self,aantal, hoogte, breedte):
         self.__cities = []
         
@@ -46,7 +51,18 @@ class country():
     def getRandomCity(self):
         return choice(self.__cities)
                 
-     
+    
+    def printAllPermutations(self):
+        randomCity = self.getRandomCity()
+        rlist = []
+        for e in itertools.permutations(self):
+            if e[0] == randomCity:
+                rlist.append(e)
+        for i in rlist:
+            print(i)
+        
+
+
         
 class city():
     def __init__(self, hoogte, breedte):
@@ -54,6 +70,9 @@ class city():
         self.__yloc = random.randint(0, breedte)
         
     def __str__(self):
+        return '(city @ %s:%s)' % (self.__xloc, self.__yloc)
+    
+    def __repr__(self):
         return '(city @ %s:%s)' % (self.__xloc, self.__yloc)
         
     def draw(self, canvas):
