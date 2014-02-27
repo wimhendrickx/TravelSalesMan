@@ -52,14 +52,20 @@ class country():
         return choice(self.__cities)
                 
     
-    def printAllPermutations(self):
+    def printAllPermutations(self, canvas):
         randomCity = self.getRandomCity()
         rlist = []
         for e in itertools.permutations(self):
             if e[0] == randomCity:
+                e += (randomCity,)
                 rlist.append(e)
+        rb = routebook()
         for i in rlist:
-            print(i)
+            rb.addRoute(i)
+        rb.printBook()
+        print ('goedkoopst')
+        rb.drawCheapestRoute(canvas)
+        
         
 
 
@@ -84,8 +90,60 @@ class city():
     def getYLoc(self):
         return self.__yloc
         
-class route():
+class routebook():
     def __init__(self):
-        pass
+        self.__routes = []
+        
+    def addRoute(self, r):
+        self.__routes.append(route(r))
+    
+    def printBook(self):
+        for r in self.__routes:
+            print(r)
+            
+    def drawCheapestRoute(self, canvas):
+        cr = 0
+        c = 0.0
+        for r in self.__routes:
+            if r.getCost() < c or cr == 0:
+                cr = r
+                c = r.getCost()
+        cr.draw(canvas)    
+        
+class route():
+    def __init__(self, r):
+        self.__route = r
+        #self.__route.append(self.__route[0])
+        
+    def __str__(self):
+        return '(route kost %s)' % (self.getCost())
+        
+    def __repr__(self):
+        return '(route kost %s)' % (self.getCost())
+    
+    def getCost(self):
+        cost = 0.0
+        c1 = 0
+        c2 = 0
+        for c in self.__route:
+            c2 = c
+            if c1 <> 0:
+                cost = cost + sqrt((c2.getXLoc()-c1.getXLoc())**2+(c2.getYLoc()-c1.getYLoc())**2)
+            c1 = c2
+        return cost
+    
+    def draw(self, w):
+        print self.getCost()
+        c1 = 0
+        c2 = 0
+        for c in self.__route:    
+            c2 = c
+            if c1 <> 0:
+                #teken
+                w.create_line(c1.getXLoc(),c1.getYLoc(),c2.getXLoc(),c2.getYLoc(),arrow="none")
+            c1 = c2
+                
+            
+        
         
     
